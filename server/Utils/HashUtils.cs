@@ -6,7 +6,7 @@ namespace server.Utils
 {
     public class HashUtils
     {
-        public async static Task<string> HashPassword(string password)
+        public async static Task<string> HashPasswordAsync(string password)
         {
             var argon2 = new Argon2d(Encoding.UTF8.GetBytes(password));
             argon2.DegreeOfParallelism = 32;
@@ -18,7 +18,7 @@ namespace server.Utils
         }
 
         //Verifies that the input password matches the stored hashed password
-        public async static Task<bool> VerifyPassword(string inputPassword, string storedHash)
+        public async static Task<bool> VerifyPasswordAsync(string inputPassword, string storedHash)
         {
             var argon2 = new Argon2d(Encoding.UTF8.GetBytes(inputPassword));
             argon2.DegreeOfParallelism = 32;
