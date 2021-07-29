@@ -30,11 +30,13 @@ namespace server
             services.AddControllers();
 
             services.AddDbContext<PrimeContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("PrimeContext")));
+                options.UseSqlite(Configuration.GetConnectionString("PrimeContext")));
+
+            services.AddAuthentication("PrimeCookie").AddCookie("PrimeCookie");
 
             services.AddSwaggerGen();
 
-            services.AddSingleton(ConnectionMultiplexer.Connect("localhost"));
+            //services.AddSingleton(ConnectionMultiplexer.Connect("localhost"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,6 +60,9 @@ namespace server
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
