@@ -1,6 +1,10 @@
 using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using server.DataAccess;
@@ -20,9 +24,29 @@ namespace server.Controllers
         {
             Db = db;
         }
+
+        private async Task<bool> UserExists(UserLogin user)
+        {
+            var hashedPassword = await HashUtils.HashPasswordAsync(user.Password);
+            if (user.Email != null)
+            {
+                if(await Db.Users.AnyAsync(dbUser => dbUser.Email == user.Email && dbUser.HashedPassword == hashedPassword))
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                if(await Db.Users.AnyAsync(dbUser => dbUser.Username == user.Username && dbUser.HashedPassword == hashedPassword))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
         
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterInput input)
+        public async Task<IActionResult> Register(UserRegister input)
         {
             //make sure username is unique
             if (await Db.Users.AnyAsync(user => user.Username == input.Username))
@@ -35,71 +59,90 @@ namespace server.Controllers
             var dbUser = new DatabaseUser();
             dbUser.Email = input.Email;
             dbUser.Username = input.Username;
-            dbUser.HashedPassword = await HashUtils.HashPassword(input.Password);
+            dbUser.HashedPassword = await HashUtils.HashPasswordAsync(input.Password);
             
             //add the user to the database and commit the changes
-            Db.Users.Add(dbUser);
+            await Db.Users.AddAsync(dbUser);
             try
             {
                 await Db.SaveChangesAsync();
             }
-            catch (DbUpdateException e)
+            catch (DbUpdateException)
             {
                 return Problem(title:"DB Update Error", detail:"Internal database failure. If this error keeps occuring please email me.");
             }
-            
-            //set cookie to login the user
+
+            var claims = new List<Claim>
+                {
+                    new Claim("user", input.Username),
+                    new Claim("role", "Member")
+                };
+
+            await HttpContext.SignInAsync(new ClaimsPrincipal(new ClaimsIdentity(claims, "Cookies", "user", "role")));
 
             return Ok();
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Login(RegisterInput input)
+        [HttpPost]
+        public async Task<IActionResult> Login(UserLogin input)
         {
-            DatabaseUser userToLogin;
-            if (!string.IsNullOrWhiteSpace(input.Email))
+            if(await UserExists(input))
             {
-                userToLogin = await Db.Users.FirstAsync(user => user.Email == input.Email);
-            }
-            else if (!string.IsNullOrWhiteSpace(input.Username))
-            {
-                userToLogin = await Db.Users.FirstAsync(user => user.Username == input.Username);
-            }
-            else
-            {
-                return Problem(title: "Form Invalid", detail: "Either Username or Email needs to be supplied.", statusCode:400);
-            }
+                var claims = new List<Claim>
+                {
+                    new Claim("user", input.Username),
+                    new Claim("role", "Member")
+                };
 
-            if (userToLogin is null)
-            {
-                return Problem(title: "No User Found", detail: "No user with those credentials exists.", statusCode:400);
-            }
-            
-            //login the user with a cookie
-            var userSessionId = Guid.NewGuid();
-            Response.Headers.Add($"Set-Cookie", $"prime_cookie={userSessionId.ToString()}");
+                await HttpContext.SignInAsync(new ClaimsPrincipal(new ClaimsIdentity(claims, "Cookies", "user", "role")));
 
+                return Ok();
+            }
+            return Unauthorized();
+
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync();
             return Ok();
         }
-        
+
         [HttpGet]
-        public async Task<IActionResult> ListUsers()
+        public IActionResult Me()
         {
-            return Ok(await Db.Users.ToListAsync());
+            if (string.IsNullOrWhiteSpace(HttpContext.User.Identity.Name))
+            {
+                return Ok($"You are not signed in.");
+
+            }
+            return Ok($"You are {HttpContext.User.Identity.Name}.");
         }
-        
-        [HttpGet]
-        public async Task<IActionResult> SetCookie()
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteAccount()
         {
-            Response.Headers.Add("Set-Cookie", "prime_cookie=value");
+            //delete the account of the signed in person
+            if (string.IsNullOrWhiteSpace(HttpContext.User.Identity.Name))
+            {
+                return Unauthorized($"You are not signed in.");
+            }
+
+            var username = HttpContext.User.Identity.Name;
+            Db.Users.Remove(await Db.Users.FirstAsync(user=>user.Username==username));
+            try
+            {
+                await Db.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                return Problem(title: "DB Update Error", detail: "Internal database failure. If this error keeps occuring please email me.");
+            }
+
+            await HttpContext.SignOutAsync();
+
             return Ok();
-        }
-        
-        [HttpGet]
-        public async Task<IActionResult> VerifyPassword(string username, string password)
-        {
-            var user = await Db.Users.Where(user => user.Username == username).FirstAsync();
-            return Ok(await HashUtils.VerifyPassword(password, user.HashedPassword));
         }
     }
 }
