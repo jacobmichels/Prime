@@ -3,11 +3,13 @@ using server.Validation;
 
 namespace server.Models.Request
 {
-    public class LoginInput
+    public class UserRegister
     {
+        [Required]
         [MinLength(3)]
         [NoAtSign]
         public string Username { get; set; }
+        [Required]
         [EmailAddress]
         public string Email { get; set; }
         [Required]
