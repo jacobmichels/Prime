@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using server.DataAccess;
-using server.Models;
+using server.Models.Database;
 using server.Models.Request;
 using server.Utils;
 
