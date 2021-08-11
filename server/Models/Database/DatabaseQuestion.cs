@@ -30,5 +30,6 @@ namespace server.Models.Database
         public bool ShowAnswerTextField {  get; set; }
         [Required]
         public string GivenAnswer { get; set; }
+        public int DatabaseQuestionSetId { get; set; }
     }
 }
