@@ -1,7 +1,10 @@
 import {
   Button,
+  Center,
+  Checkbox,
   FormControl,
   FormLabel,
+  HStack,
   Input,
   Modal,
   ModalBody,
@@ -18,23 +21,27 @@ export default function HostModal(props: any) {
     <Modal isOpen={props.isOpen} onClose={props.onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Create your account</ModalHeader>
+        <ModalHeader>Host a game</ModalHeader>
         <ModalCloseButton />
-        <ModalBody pb={6}>
+        <ModalBody>
           <FormControl>
-            <FormLabel>First name</FormLabel>
-            <Input placeholder="First name" />
+            <FormLabel>Session Name</FormLabel>
+            <Input placeholder="Name" />
           </FormControl>
 
-          <FormControl mt={4}>
-            <FormLabel>Last name</FormLabel>
-            <Input placeholder="Last name" />
+          <FormControl mt={2}>
+            <Center>
+              <HStack>
+                <FormLabel>Private</FormLabel>
+                <Checkbox />
+              </HStack>
+            </Center>
           </FormControl>
         </ModalBody>
 
         <ModalFooter>
           <Button colorScheme="blue" mr={3}>
-            Save
+            Start
           </Button>
           <Button onClick={props.onClose}>Cancel</Button>
         </ModalFooter>
