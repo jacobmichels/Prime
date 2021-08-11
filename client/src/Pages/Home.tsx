@@ -11,9 +11,12 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import React from "react";
+import { useState } from "react";
+import { useEffect } from "react";
 import styled from "styled-components";
 import HostModal from "../Components/HostModal";
 import Navbar from "../Components/Navbar";
+import { BASE_URL } from "../Util/BaseURL";
 import emailLogo from "../vector/email.svg";
 import githubLogo from "../vector/github.svg";
 
@@ -23,6 +26,22 @@ const Image = styled.img`
 
 export default function Home() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [name, setName] = useState<string>();
+
+  useEffect(() => {
+    async function GetUser() {
+      let res = await fetch(BASE_URL + "/user/me", {
+        credentials: "include",
+        mode: "cors",
+      });
+      if (res.status === 200) {
+        let json = await res.json();
+        setName(json.username);
+      }
+    }
+    GetUser();
+  });
+
   return (
     <>
       <Navbar />
@@ -37,10 +56,22 @@ export default function Home() {
           borderRadius="15px"
           color="white"
         >
-          <Text fontSize="2xl">Welcome back</Text>
-          <Text fontWeight="bold" fontSize="3xl">
+          {name ? (
+            <>
+              <Text fontSize="2xl">Welcome back</Text>
+              <Text fontWeight="bold" fontSize="3xl">
+                {name}
+              </Text>
+            </>
+          ) : (
+            <>
+              <Text fontSize="2xl">Hello there!</Text>
+            </>
+          )}
+
+          {/* <Text fontWeight="bold" fontSize="3xl">
             Jacob
-          </Text>
+          </Text> */}
         </Box>
         <Divider />
         {/* //3 columns on desktop, 1 on mobile //footer */}
