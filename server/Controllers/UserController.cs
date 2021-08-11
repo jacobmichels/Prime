@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using server.DataAccess;
@@ -30,6 +31,7 @@ namespace server.Controllers
             var hashedPassword = await HashUtils.HashPasswordAsync(user.Password);
             if (user.Email != null)
             {
+
                 if(await Db.Users.AnyAsync(dbUser => dbUser.Email == user.Email && dbUser.HashedPassword == hashedPassword))
                 {
                     return true;
@@ -52,15 +54,15 @@ namespace server.Controllers
             if (await Db.Users.AnyAsync(user => user.Username == input.Username))
             {
                 return Problem(title: "Unique Username Constraint Failed",
-                    detail: "A user with that name exists. Please pick another name", statusCode:400);
+                    detail: "A user with that name exists. Please pick another name", statusCode: 400);
             }
-            
+
             //construct database object
             var dbUser = new DatabaseUser();
             dbUser.Email = input.Email;
             dbUser.Username = input.Username;
             dbUser.HashedPassword = await HashUtils.HashPasswordAsync(input.Password);
-            
+
             //add the user to the database and commit the changes
             await Db.Users.AddAsync(dbUser);
             try
@@ -103,6 +105,7 @@ namespace server.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync();
@@ -110,21 +113,22 @@ namespace server.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult Me()
         {
-            if (string.IsNullOrWhiteSpace(HttpContext.User.Identity.Name))
+            if (string.IsNullOrWhiteSpace(HttpContext.User.Identity?.Name))
             {
                 return Ok($"You are not signed in.");
 
             }
-            return Ok($"You are {HttpContext.User.Identity.Name}.");
+            return Ok($"You are logged in as \"{HttpContext.User.Identity.Name}\".");
         }
 
-        [HttpPost]
+        [HttpDelete]
         public async Task<IActionResult> DeleteAccount()
         {
             //delete the account of the signed in person
-            if (string.IsNullOrWhiteSpace(HttpContext.User.Identity.Name))
+            if (string.IsNullOrWhiteSpace(HttpContext.User.Identity?.Name))
             {
                 return Unauthorized($"You are not signed in.");
             }
