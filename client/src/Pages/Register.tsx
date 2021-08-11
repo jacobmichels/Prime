@@ -11,6 +11,8 @@ import { Field, Form, Formik } from "formik";
 import React from "react";
 import { Link } from "react-router-dom";
 import Navbar from "../Components/Navbar";
+import PasswordInput from "../Components/PasswordInput";
+import { BASE_URL } from "../Util/BaseURL";
 
 export default function Register() {
   function validateName(value: string) {
@@ -63,16 +65,20 @@ export default function Register() {
         <Box ml={3}>
           <Formik
             initialValues={{}}
-            onSubmit={(values, actions) => {
-              setTimeout(() => {
-                alert(JSON.stringify(values, null, 2));
-                actions.setSubmitting(false);
-              }, 1000);
+            onSubmit={async (values, actions) => {
+              let res = await fetch(BASE_URL + "/User/Register", {
+                method: "POST",
+                body: JSON.stringify(values),
+                credentials: "include",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              });
             }}
           >
             {(props) => (
               <Form>
-                <Field name="name" validate={validateName}>
+                <Field name="username" validate={validateName}>
                   {({ field, form }: any) => (
                     <FormControl
                       isInvalid={form.errors.name && form.touched.name}
@@ -122,13 +128,7 @@ export default function Register() {
                       <FormLabel color="white" htmlFor="password">
                         Password
                       </FormLabel>
-                      <Input
-                        autoComplete="off"
-                        {...field}
-                        id="password"
-                        _placeholder={{ color: "white" }}
-                        placeholder="Password"
-                      />
+                      <PasswordInput field={field}></PasswordInput>
                       <FormErrorMessage fontSize="md" color="white">
                         ⚠️ {form.errors.password}
                       </FormErrorMessage>
