@@ -31,7 +31,16 @@ namespace server
 
             services.AddDbContext<PrimeContext>(options =>
                 options.UseSqlite(Configuration.GetConnectionString("PrimeContext")).UseLazyLoadingProxies());
-                
+
+            services.AddCors(options=> {
+                options.AddDefaultPolicy(options =>
+                {
+                    options.AllowAnyHeader();
+                    options.AllowAnyMethod();
+                    options.SetIsOriginAllowed(origin=>true);
+                    options.AllowCredentials();
+                });
+            });
 
             services.AddAuthentication("PrimeCookie").AddCookie("PrimeCookie", options => {
                 options.Events.OnRedirectToLogin = ctx =>
@@ -65,6 +74,8 @@ namespace server
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors();
 
             app.UseAuthentication();
             app.UseAuthorization();
