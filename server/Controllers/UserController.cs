@@ -116,12 +116,7 @@ namespace server.Controllers
         [Authorize]
         public IActionResult Me()
         {
-            if (string.IsNullOrWhiteSpace(HttpContext.User.Identity?.Name))
-            {
-                return Ok($"You are not signed in.");
-
-            }
-            return Ok($"You are logged in as \"{HttpContext.User.Identity.Name}\".");
+            return Ok(new {username=HttpContext.User.Identity?.Name});
         }
 
         [HttpDelete]
