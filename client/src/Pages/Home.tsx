@@ -7,10 +7,12 @@ import {
   Input,
   SimpleGrid,
   Text,
+  useDisclosure,
   VStack,
 } from "@chakra-ui/react";
 import React from "react";
 import styled from "styled-components";
+import HostModal from "../Components/HostModal";
 import Navbar from "../Components/Navbar";
 import emailLogo from "../vector/email.svg";
 import githubLogo from "../vector/github.svg";
@@ -20,9 +22,11 @@ const Image = styled.img`
 `;
 
 export default function Home() {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <>
       <Navbar />
+      <HostModal isOpen={isOpen} onClose={onClose}></HostModal>
       <VStack margin="auto" maxW="1300px" alignItems="center" spacing={6}>
         <Box
           height="100%"
@@ -44,17 +48,26 @@ export default function Home() {
           <Box borderRadius="15px" bg="blue.500" height="250px" width="300px">
             <Center>
               <VStack>
-                <Text fontWeight="bold" mt={1} fontSize="3xl">
+                <Text fontWeight="bold" mt={2} fontSize="3xl">
                   Play
                 </Text>
                 <Text fontSize="medium">Find or create a game.</Text>
                 <Button
+                  onClick={onOpen}
                   display="block"
                   variant="solid"
                   bg="blue.600"
                   _hover={{ bg: "blue.900", borderColor: "blue.900" }}
                 >
                   Host new game
+                </Button>
+                <Button
+                  display="block"
+                  variant="solid"
+                  bg="blue.600"
+                  _hover={{ bg: "blue.900", borderColor: "blue.900" }}
+                >
+                  Join with code
                 </Button>
                 <Input
                   size="sm"
@@ -65,22 +78,14 @@ export default function Home() {
                   width="140px"
                   color="white"
                 />
-                <Button
-                  display="block"
-                  variant="solid"
-                  bg="blue.600"
-                  _hover={{ bg: "blue.900", borderColor: "blue.900" }}
-                >
-                  Join with code
-                </Button>
               </VStack>
             </Center>
           </Box>
           <Box borderRadius="15px" bg="blue.500" height="250px" width="300px">
             <Center>
-              <VStack spacing={10} textAlign="center">
+              <VStack spacing={3} textAlign="center">
                 <Box>
-                  <Text fontWeight="bold" mt={1} fontSize="3xl">
+                  <Text fontWeight="bold" mt={2} fontSize="3xl">
                     Question Sets
                   </Text>
                   <Text pt={2} pl={5} pr={5} fontSize="medium">
@@ -93,7 +98,15 @@ export default function Home() {
                   bg="blue.600"
                   _hover={{ bg: "blue.900", borderColor: "blue.900" }}
                 >
-                  Modify Question Sets
+                  View Question Sets
+                </Button>
+                <Button
+                  display="block"
+                  variant="solid"
+                  bg="blue.600"
+                  _hover={{ bg: "blue.900", borderColor: "blue.900" }}
+                >
+                  Create New Question Set
                 </Button>
               </VStack>
             </Center>
@@ -102,11 +115,11 @@ export default function Home() {
             <Center>
               <VStack spacing={6} textAlign="center">
                 <Box>
-                  <Text fontWeight="bold" mt={1} fontSize="3xl">
+                  <Text fontWeight="bold" mt={2} fontSize="3xl">
                     Career Stats
                   </Text>
                   <Text pt={2} pl={5} pr={5} fontSize="medium">
-                    Get an overview of how you've been playing.
+                    See how you stack up.
                   </Text>
                 </Box>
                 <Box>
@@ -156,7 +169,7 @@ export default function Home() {
         </Box>
         <Divider />
         <HStack spacing={5}>
-          <Text fontSize="xl">Made by Jacob 💯</Text>
+          {/* <Text fontSize="xl"></Text> */}
           <Box borderRadius="10px" p={2} bg="coral">
             <a href="https://github.com">
               <Image alt="Github logo icon" src={githubLogo} />
