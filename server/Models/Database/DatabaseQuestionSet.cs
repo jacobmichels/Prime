@@ -8,16 +8,16 @@ namespace server.Models.Database
 {
     public class DatabaseQuestionSet
     {
-        public DatabaseQuestionSet(string title, bool priv)
+        public DatabaseQuestionSet(string title, bool priv, string owner)
         {
             Title = title;
             Private = priv;
             Questions = new List<DatabaseQuestion>();
+            OwnerName = owner;
         }
         public DatabaseQuestionSet()
         {
         }
-
 
         [Key]
         public int Id { get; set; }
@@ -26,7 +26,7 @@ namespace server.Models.Database
         [Required]
         public bool Private { get; set; }
         [Required]
-        public DatabaseUser Owner { get; set; }
-        public List<DatabaseQuestion> Questions { get; set; }
+        public string OwnerName { get; set; }
+        public virtual List<DatabaseQuestion> Questions { get; set; }
     }
 }
