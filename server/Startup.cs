@@ -30,13 +30,18 @@ namespace server
             services.AddControllers();
 
             services.AddDbContext<PrimeContext>(options =>
-                options.UseSqlite(Configuration.GetConnectionString("PrimeContext")));
+                options.UseSqlite(Configuration.GetConnectionString("PrimeContext")).UseLazyLoadingProxies());
+                
 
-            services.AddAuthentication("PrimeCookie").AddCookie("PrimeCookie");
+            services.AddAuthentication("PrimeCookie").AddCookie("PrimeCookie", options => {
+                options.Events.OnRedirectToLogin = ctx =>
+                {
+                    ctx.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                    return Task.CompletedTask;
+                };
+            });
 
             services.AddSwaggerGen();
-
-            //services.AddSingleton(ConnectionMultiplexer.Connect("localhost"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
