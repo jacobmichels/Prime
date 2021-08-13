@@ -11,6 +11,8 @@ import { Field, Form, Formik } from "formik";
 import React from "react";
 import { Link } from "react-router-dom";
 import Navbar from "../Components/Navbar";
+import PasswordInput from "../Components/PasswordInput";
+import { BASE_URL } from "../Util/BaseURL";
 
 export default function Login() {
   function validateUsernameOrEmail(value: string) {
@@ -47,11 +49,15 @@ export default function Login() {
         <Box ml={3} mr={3}>
           <Formik
             initialValues={{}}
-            onSubmit={(values, actions) => {
-              setTimeout(() => {
-                alert(JSON.stringify(values, null, 2));
-                actions.setSubmitting(false);
-              }, 1000);
+            onSubmit={async (values, actions) => {
+              // let res = await fetch(BASE_URL + "/User/Login", {
+              //   method: "POST",
+              //   body: JSON.stringify(values),
+              //   credentials: "include",
+              //   headers: {
+              //     "Content-Type": "application/json",
+              //   },
+              // });
             }}
           >
             {(props) => (
@@ -95,13 +101,14 @@ export default function Login() {
                       <FormLabel color="white" htmlFor="password">
                         Password
                       </FormLabel>
-                      <Input
+                      {/* <Input
                         autoComplete="off"
                         {...field}
                         id="password"
                         _placeholder={{ color: "white" }}
                         placeholder="Password"
-                      />
+                      /> */}
+                      <PasswordInput field={field}></PasswordInput>
                       <FormErrorMessage
                         fontSize="md"
                         // fontWeight="semibold"
