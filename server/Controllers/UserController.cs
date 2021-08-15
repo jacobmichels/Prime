@@ -28,6 +28,7 @@ namespace server.Controllers
 
         private async Task<bool> UserExists(UserLogin user)
         {
+            //TODO need to check more cases, currently able to login with current email and incorrect username
             var hashedPassword = await HashUtils.HashPasswordAsync(user.Password);
             if (user.Email != null)
             {
