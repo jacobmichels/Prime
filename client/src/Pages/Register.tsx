@@ -9,12 +9,14 @@ import {
 } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import Navbar from "../Components/Navbar";
 import PasswordInput from "../Components/PasswordInput";
 import { BASE_URL } from "../Util/BaseURL";
 
 export default function Register() {
+  const history = useHistory();
+
   function validateName(value: string) {
     let error;
     if (!value) {
@@ -47,6 +49,10 @@ export default function Register() {
     return error;
   }
 
+  function handleAuthSuccessRedirect() {
+    history.push("/home");
+  }
+
   return (
     <>
       <Navbar noregister />
@@ -74,6 +80,9 @@ export default function Register() {
                   "Content-Type": "application/json",
                 },
               });
+              if (res.status === 200) {
+                handleAuthSuccessRedirect();
+              }
             }}
           >
             {(props) => (
