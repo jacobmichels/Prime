@@ -21,10 +21,10 @@ export default function Register() {
     let error;
     if (!value) {
       error = "Username is required.";
-    } else if (value.length < 3) {
-      error = "Username not long enough.";
     } else if (value.includes("@")) {
       error = "Username cannot include '@'.";
+    } else if (value.length < 3) {
+      error = "Username not long enough.";
     }
     return error;
   }
@@ -90,7 +90,7 @@ export default function Register() {
                 <Field name="username" validate={validateName}>
                   {({ field, form }: any) => (
                     <FormControl
-                      isInvalid={form.errors.name && form.touched.name}
+                      isInvalid={form.errors.username && form.touched.username}
                     >
                       <FormLabel color="white" htmlFor="username">
                         Username
@@ -103,7 +103,7 @@ export default function Register() {
                         placeholder="Username"
                       />
                       <FormErrorMessage fontSize="md" color="white">
-                        ⚠️ {form.errors.name}
+                        ⚠️ {form.errors.username}
                       </FormErrorMessage>
                     </FormControl>
                   )}
