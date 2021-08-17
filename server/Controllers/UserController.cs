@@ -25,28 +25,6 @@ namespace server.Controllers
         {
             Db = db;
         }
-
-        private async Task<bool> UserExists(UserLogin user)
-        {
-            //TODO need to check more cases, currently able to login with current email and incorrect username
-            var hashedPassword = await HashUtils.HashPasswordAsync(user.Password);
-            if (user.Email != null)
-            {
-
-                if(await Db.Users.AnyAsync(dbUser => dbUser.Email == user.Email && dbUser.HashedPassword == hashedPassword))
-                {
-                    return true;
-                }
-            }
-            else
-            {
-                if(await Db.Users.AnyAsync(dbUser => dbUser.Username == user.Username && dbUser.HashedPassword == hashedPassword))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
         
         [HttpPost]
         public async Task<IActionResult> Register(UserRegister input)
@@ -89,20 +67,32 @@ namespace server.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(UserLogin input)
         {
-            if(await UserExists(input))
+            var hashedPassword = await HashUtils.HashPasswordAsync(input.Password);
+            DatabaseUser? user = null;
+            if (input.UsernameOrEmail.Contains('@'))
             {
-                var claims = new List<Claim>
+                //username or email is an email
+                user = await Db.Users.FirstOrDefaultAsync(user => user.Email == input.UsernameOrEmail && user.HashedPassword == hashedPassword);
+            }
+            else
+            {
+                //username or email is a username
+                user = await Db.Users.FirstOrDefaultAsync(user => user.Username == input.UsernameOrEmail && user.HashedPassword == hashedPassword);
+            }
+            if (user is null)
+            {
+                return Unauthorized();
+            }
+
+            var claims = new List<Claim>
                 {
-                    new Claim("user", input.Username),
+                    new Claim("user", user.Username),
                     new Claim("role", "Member")
                 };
 
-                await HttpContext.SignInAsync(new ClaimsPrincipal(new ClaimsIdentity(claims, "Cookies", "user", "role")));
+            await HttpContext.SignInAsync(new ClaimsPrincipal(new ClaimsIdentity(claims, "Cookies", "user", "role")));
 
-                return Ok();
-            }
-            return Unauthorized();
-
+            return Ok();
         }
 
         [HttpGet]
@@ -119,17 +109,11 @@ namespace server.Controllers
         {
             return Ok(new {username=HttpContext.User.Identity?.Name});
         }
-
+        [Authorize]
         [HttpDelete]
         public async Task<IActionResult> DeleteAccount()
         {
-            //delete the account of the signed in person
-            if (string.IsNullOrWhiteSpace(HttpContext.User.Identity?.Name))
-            {
-                return Unauthorized($"You are not signed in.");
-            }
-
-            var username = HttpContext.User.Identity.Name;
+            var username = HttpContext.User.Identity?.Name;
             Db.Users.Remove(await Db.Users.FirstAsync(user=>user.Username==username));
             try
             {
