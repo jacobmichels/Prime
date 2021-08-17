@@ -11,7 +11,12 @@ import {
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-export default function Navbar(props: any) {
+interface NavbarProps {
+  noregister?: boolean;
+  nologin?: boolean;
+}
+
+export default function Navbar(props: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const handleToggle = () => setIsOpen(!isOpen);
 
