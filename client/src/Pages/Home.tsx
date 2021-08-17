@@ -14,6 +14,7 @@ import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 import styled from "styled-components";
+import { AuthContext } from "../App";
 import HostModal from "../Components/HostModal";
 import Navbar from "../Components/Navbar";
 import { BASE_URL } from "../Util/BaseURL";
@@ -26,7 +27,7 @@ const Image = styled.img`
 
 export default function Home() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [name, setName] = useState<string>();
+  const authCtx = React.useContext(AuthContext);
 
   useEffect(() => {
     async function GetUser() {
@@ -36,7 +37,7 @@ export default function Home() {
       });
       if (res.status === 200) {
         let json = await res.json();
-        setName(json.username);
+        authCtx.setUsername(json.username);
       }
     }
     GetUser();
@@ -56,11 +57,11 @@ export default function Home() {
           borderRadius="15px"
           color="white"
         >
-          {name ? (
+          {authCtx.username ? (
             <>
               <Text fontSize="2xl">Welcome back</Text>
               <Text fontWeight="bold" fontSize="3xl">
-                {name}
+                {authCtx.username}
               </Text>
             </>
           ) : (
