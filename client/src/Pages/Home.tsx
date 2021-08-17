@@ -10,9 +10,7 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react";
-import React from "react";
-import { useState } from "react";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { AuthContext } from "../App";
 import HostModal from "../Components/HostModal";

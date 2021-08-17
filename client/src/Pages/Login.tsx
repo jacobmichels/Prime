@@ -12,7 +12,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Navbar from "../Components/Navbar";
 import PasswordInput from "../Components/PasswordInput";
-import { BASE_URL } from "../Util/BaseURL";
 
 export default function Login() {
   function validateUsernameOrEmail(value: string) {
