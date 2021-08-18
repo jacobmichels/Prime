@@ -11,17 +11,12 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import React, { useEffect } from "react";
-import styled from "styled-components";
 import { AuthContext } from "../App";
 import HostModal from "../Components/HostModal";
 import Navbar from "../Components/Navbar";
 import { BASE_URL } from "../Util/BaseURL";
 import emailLogo from "../vector/email.svg";
 import githubLogo from "../vector/github.svg";
-
-const Image = styled.img`
-  height: 50px;
-`;
 
 export default function Home() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -202,12 +197,14 @@ export default function Home() {
           {/* <Text fontSize="xl"></Text> */}
           <Box borderRadius="10px" p={2} bg="coral">
             <a href="https://github.com">
-              <Image alt="Github logo icon" src={githubLogo} />
+              {/* <Image alt="Github logo icon" src={githubLogo} /> */}
+              <img className="icon" alt="Github icon" src={githubLogo}></img>
             </a>
           </Box>
           <Box borderRadius="10px" p={2} bg="coral">
             <a href="mailto:jacob.michels2025@gmail.com">
-              <Image alt="Email icon" src={emailLogo} />
+              <img className="icon" alt="Email icon" src={emailLogo}></img>
+              {/* <Image alt="Email icon" src={emailLogo} /> */}
             </a>
           </Box>
         </HStack>
