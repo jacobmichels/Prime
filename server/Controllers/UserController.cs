@@ -36,6 +36,13 @@ namespace server.Controllers
                     detail: "A user with that name exists. Please pick another name", statusCode: 400);
             }
 
+            //make sure email is unique
+            if (await Db.Users.AnyAsync(user => user.Email == input.Email))
+            {
+                return Problem(title: "Unique Email Constraint Failed",
+                    detail: "An account with that email already exists. Please login instead.", statusCode: 400);
+            }
+
             //construct database object
             var dbUser = new DatabaseUser();
             dbUser.Email = input.Email;
