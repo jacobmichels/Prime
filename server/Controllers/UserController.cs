@@ -33,7 +33,7 @@ namespace server.Controllers
             if (await Db.Users.AnyAsync(user => user.Username == input.Username))
             {
                 return Problem(title: "Unique Username Constraint Failed",
-                    detail: "A user with that name exists. Please pick another name", statusCode: 400);
+                    detail: "A user with that name exists. Please pick another name.", statusCode: 400);
             }
 
             //make sure email is unique
