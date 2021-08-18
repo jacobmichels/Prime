@@ -9,11 +9,14 @@ import {
 } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import Navbar from "../Components/Navbar";
 import PasswordInput from "../Components/PasswordInput";
+import { BASE_URL } from "../Util/BaseURL";
 
 export default function Login() {
+  const history = useHistory();
+
   function validateUsernameOrEmail(value: string) {
     let error;
     if (!value) {
@@ -49,14 +52,17 @@ export default function Login() {
           <Formik
             initialValues={{}}
             onSubmit={async (values, actions) => {
-              // let res = await fetch(BASE_URL + "/User/Login", {
-              //   method: "POST",
-              //   body: JSON.stringify(values),
-              //   credentials: "include",
-              //   headers: {
-              //     "Content-Type": "application/json",
-              //   },
-              // });
+              let res = await fetch(BASE_URL + "/User/Login", {
+                method: "POST",
+                body: JSON.stringify(values),
+                credentials: "include",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              });
+              if (res.status === 200) {
+                history.push("/home");
+              }
             }}
           >
             {(props) => (
