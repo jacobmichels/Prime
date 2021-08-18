@@ -10,6 +10,8 @@ import {
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../App";
+import { BASE_URL } from "../Util/BaseURL";
 
 interface NavbarProps {
   noregister?: boolean;
@@ -19,6 +21,8 @@ interface NavbarProps {
 export default function Navbar(props: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const handleToggle = () => setIsOpen(!isOpen);
+
+  const authCtx = React.useContext(AuthContext);
 
   return (
     <Box bg="green.500">
@@ -53,32 +57,57 @@ export default function Navbar(props: NavbarProps) {
           mt={{ base: 4, md: 0 }}
         >
           <Spacer display={{ base: "none", md: "block" }}></Spacer>
-          <Box>
-            <Link to="/register">
+          {authCtx.username ? (
+            <Box>
               <Button
                 display="block"
                 variant="solid"
                 bg="green.600"
                 _hover={{ bg: "green.900", borderColor: "green.900" }}
-                visibility={props.noregister ? "hidden" : "visible"}
+                onClick={async function () {
+                  let res = await fetch(BASE_URL + "/User/Logout", {
+                    method: "GET",
+                    credentials: "include",
+                  });
+                  if (res.status === 200) {
+                    authCtx.setUsername("");
+                  }
+                }}
               >
-                Register
+                Logout
               </Button>
-            </Link>
-          </Box>
-          <Box>
-            <Link to="/login">
-              <Button
-                display="block"
-                variant="solid"
-                bg="green.600"
-                _hover={{ bg: "green.900", borderColor: "green.900" }}
-                visibility={props.nologin ? "hidden" : "visible"}
-              >
-                Login
-              </Button>
-            </Link>
-          </Box>
+            </Box>
+          ) : (
+            <>
+              <Box>
+                <Link to="/register">
+                  <Button
+                    display="block"
+                    variant="solid"
+                    bg="green.600"
+                    _hover={{ bg: "green.900", borderColor: "green.900" }}
+                    visibility={props.noregister ? "hidden" : "visible"}
+                  >
+                    Register
+                  </Button>
+                </Link>
+              </Box>
+              <Box>
+                <Link to="/login">
+                  <Button
+                    display="block"
+                    variant="solid"
+                    bg="green.600"
+                    _hover={{ bg: "green.900", borderColor: "green.900" }}
+                    visibility={props.nologin ? "hidden" : "visible"}
+                  >
+                    Login
+                  </Button>
+                </Link>
+              </Box>
+            </>
+          )}
+
           <IconButton
             bg="green.600"
             borderRadius="0.375rem"
