@@ -8,7 +8,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
-import React from "react";
+import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import Navbar from "../Components/Navbar";
 import PasswordInput from "../Components/PasswordInput";
@@ -16,6 +16,8 @@ import { BASE_URL } from "../Util/BaseURL";
 
 export default function Register() {
   const history = useHistory();
+
+  const [serverErrorText, setServerErrorText] = useState<string>("");
 
   function validateName(value: string) {
     let error;
@@ -82,6 +84,9 @@ export default function Register() {
               });
               if (res.status === 200) {
                 handleAuthSuccessRedirect();
+              } else {
+                // alert((await res.json())["detail"]);
+                setServerErrorText("⚠️ " + (await res.json())["detail"]);
               }
             }}
           >
@@ -166,6 +171,7 @@ export default function Register() {
                     Cancel
                   </Button>
                 </Link>
+                <Text>{serverErrorText}</Text>
               </Form>
             )}
           </Formik>

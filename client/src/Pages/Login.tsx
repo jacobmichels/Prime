@@ -8,7 +8,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
-import React from "react";
+import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import Navbar from "../Components/Navbar";
 import PasswordInput from "../Components/PasswordInput";
@@ -16,6 +16,8 @@ import { BASE_URL } from "../Util/BaseURL";
 
 export default function Login() {
   const history = useHistory();
+
+  const [serverErrorText, setServerErrorText] = useState<string>("");
 
   function validateUsernameOrEmail(value: string) {
     let error;
@@ -62,6 +64,8 @@ export default function Login() {
               });
               if (res.status === 200) {
                 history.push("/home");
+              } else {
+                setServerErrorText("⚠️ Incorrect username or password.");
               }
             }}
           >
@@ -146,6 +150,7 @@ export default function Login() {
                     Cancel
                   </Button>
                 </Link>
+                <Text>{serverErrorText}</Text>
               </Form>
             )}
           </Formik>
