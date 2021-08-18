@@ -9,7 +9,7 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { AuthContext } from "../App";
 import { BASE_URL } from "../Util/BaseURL";
 
@@ -19,6 +19,7 @@ interface NavbarProps {
 }
 
 export default function Navbar(props: NavbarProps) {
+  const history = useHistory();
   const [isOpen, setIsOpen] = useState(false);
   const handleToggle = () => setIsOpen(!isOpen);
 
@@ -71,6 +72,7 @@ export default function Navbar(props: NavbarProps) {
                   });
                   if (res.status === 200) {
                     authCtx.setUsername("");
+                    history.push("/home");
                   }
                 }}
               >
