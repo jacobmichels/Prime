@@ -14,6 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
 import React, { useEffect } from "react";
+import { Link } from "react-router-dom";
 import { AuthContext } from "../App";
 import HostModal from "../Components/HostModal";
 import Navbar from "../Components/Navbar";
@@ -145,14 +146,17 @@ export default function Home() {
                     Create or modify questions sets to be used in game.
                   </Text>
                 </Box>
-                <Button
-                  display="block"
-                  variant="solid"
-                  bg="blue.600"
-                  _hover={{ bg: "blue.900", borderColor: "blue.900" }}
-                >
-                  View Question Sets
-                </Button>
+                <Link to="/questions">
+                  <Button
+                    display="block"
+                    variant="solid"
+                    bg="blue.600"
+                    _hover={{ bg: "blue.900", borderColor: "blue.900" }}
+                  >
+                    View Question Sets
+                  </Button>
+                </Link>
+
                 <Button
                   display="block"
                   variant="solid"
