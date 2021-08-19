@@ -3,6 +3,8 @@ import {
   Button,
   Center,
   Divider,
+  FormControl,
+  FormErrorMessage,
   HStack,
   Input,
   SimpleGrid,
@@ -10,6 +12,7 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react";
+import { Field, Form, Formik } from "formik";
 import React, { useEffect } from "react";
 import { AuthContext } from "../App";
 import HostModal from "../Components/HostModal";
@@ -86,23 +89,48 @@ export default function Home() {
                 >
                   Host new game
                 </Button>
-                <Button
-                  display="block"
-                  variant="solid"
-                  bg="blue.600"
-                  _hover={{ bg: "blue.900", borderColor: "blue.900" }}
+                <Formik
+                  initialValues={{}}
+                  onSubmit={function (values, actions) {
+                    alert(values);
+                  }}
                 >
-                  Join with code
-                </Button>
-                <Input
-                  size="sm"
-                  autoComplete="off"
-                  bgColor="blue.600"
-                  placeholder="Join code"
-                  _placeholder={{ color: "whitesmoke" }}
-                  width="140px"
-                  color="white"
-                />
+                  {(props) => (
+                    <Form>
+                      <VStack spacing={3}>
+                        <Field name="joincode">
+                          {({ field, form }: any) => (
+                            <FormControl
+                              isInvalid={
+                                form.errors.joincode && form.touched.joincode
+                              }
+                            >
+                              <Input
+                                maxW="150px"
+                                autoComplete="off"
+                                {...field}
+                                id="joincode"
+                                _placeholder={{ color: "white" }}
+                                placeholder="Joincode"
+                              />
+                            </FormControl>
+                          )}
+                        </Field>
+                        <Button
+                          m={3}
+                          variant="solid"
+                          color="white"
+                          bg="blue.600"
+                          _hover={{ bg: "blue.900", borderColor: "blue.900" }}
+                          isLoading={props.isSubmitting}
+                          type="submit"
+                        >
+                          Join with code
+                        </Button>
+                      </VStack>
+                    </Form>
+                  )}
+                </Formik>
               </VStack>
             </Center>
           </Box>
