@@ -7,6 +7,7 @@ import {
   IconButton,
   Spacer,
   Stack,
+  useToast,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
@@ -20,6 +21,7 @@ interface NavbarProps {
 
 export default function Navbar(props: NavbarProps) {
   const history = useHistory();
+  const toast = useToast();
   const [isOpen, setIsOpen] = useState(false);
   const handleToggle = () => setIsOpen(!isOpen);
 
@@ -73,6 +75,12 @@ export default function Navbar(props: NavbarProps) {
                   if (res.status === 200) {
                     authCtx.setUsername("");
                     history.push("/home");
+                    toast({
+                      title: "Logged out 👍",
+                      status: "success",
+                      duration: 5000,
+                      isClosable: true,
+                    });
                   }
                 }}
               >

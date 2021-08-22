@@ -6,16 +6,19 @@ import {
   FormLabel,
   Input,
   Text,
+  useToast,
 } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
 import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import Navbar from "../Components/Navbar";
 import PasswordInput from "../Components/PasswordInput";
+import TitleText from "../Components/TitleText";
 import { BASE_URL } from "../Util/BaseURL";
 
 export default function Login() {
   const history = useHistory();
+  const toast = useToast();
 
   const [serverErrorText, setServerErrorText] = useState<string>("");
 
@@ -47,9 +50,10 @@ export default function Login() {
         mr="auto"
         maxW={{ base: "300px", md: "800px" }}
       >
-        <Text color="white" ml={4} mb={4} fontWeight="bold" fontSize="3xl">
-          Login
-        </Text>
+        <Box mb={4} ml={4}>
+          <TitleText color="white">Login</TitleText>
+        </Box>
+
         <Box ml={3} mr={3}>
           <Formik
             initialValues={{}}
@@ -64,6 +68,12 @@ export default function Login() {
               });
               if (res.status === 200) {
                 history.push("/home");
+                toast({
+                  title: "Logged in 👍",
+                  status: "success",
+                  duration: 5000,
+                  isClosable: true,
+                });
               } else {
                 setServerErrorText("⚠️ Incorrect username or password.");
               }
