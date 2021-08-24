@@ -73,21 +73,25 @@ export default function Questions() {
       <Center>
         <Box maxW="1000px">
           <Center>
-            <VStack>
-              <Box
-                mt={5}
-                width="fit-content"
-                bg="purple.500"
-                borderRadius={25}
-                p={15}
-              >
+            <Box
+              mt={5}
+              width="fit-content"
+              bg="purple.500"
+              borderRadius={25}
+              p={15}
+            >
+              <VStack>
                 <Title />
                 <Text>
                   Here is where you will find all public Question Sets, as well
                   as your own.
                 </Text>
-              </Box>
-            </VStack>
+                <Text>
+                  To create a new QuestionSet, click the button below.
+                </Text>
+                <Button>Create QuestionSet</Button>
+              </VStack>
+            </Box>
           </Center>
           <Tabs mt={3} variant="solid-rounded">
             <Center>
