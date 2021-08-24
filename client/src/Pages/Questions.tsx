@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Center,
   Tab,
   TabList,
@@ -19,7 +20,7 @@ import { BASE_URL } from "../Util/BaseURL";
 
 function Title() {
   return (
-    <Center mt={4}>
+    <Center>
       <TitleText color="white">Question Sets</TitleText>
     </Center>
   );
@@ -64,19 +65,35 @@ export default function Questions() {
       }
     }
     GetQuestionSets();
-  }, []);
+  });
 
   return (
     <>
       <Navbar />
       <Center>
-        <Box maxW="1000px" bg="purple.500" borderRadius={25} mt={10}>
-          <Title />
+        <Box maxW="1000px">
+          <Center>
+            <VStack>
+              <Box
+                mt={5}
+                width="fit-content"
+                bg="purple.500"
+                borderRadius={25}
+                p={15}
+              >
+                <Title />
+                <Text>
+                  Here is where you will find all public Question Sets, as well
+                  as your own.
+                </Text>
+              </Box>
+            </VStack>
+          </Center>
           <Tabs mt={3} variant="solid-rounded">
-            <Center width="500px">
-              <TabList>
+            <Center>
+              <TabList bg="blue.500" borderRadius={20} p={5}>
                 <Tab>Everyone's</Tab>
-                <Tab>Only Yours</Tab>
+                <Tab>Only Mine</Tab>
               </TabList>
             </Center>
             <Box borderRadius="xl">
