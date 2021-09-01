@@ -65,7 +65,7 @@ export default function Questions() {
       }
     }
     GetQuestionSets();
-  });
+  }, [authCtx]);
 
   return (
     <>
