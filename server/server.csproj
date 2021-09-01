@@ -14,6 +14,7 @@
         </PackageReference>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="5.0.8" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.8" />
+        <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.14" />
         <PackageReference Include="StackExchange.Redis" Version="2.2.62" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />
     </ItemGroup>
@@ -24,6 +25,8 @@
   
   <PropertyGroup>
     <Nullable>enable</Nullable>
+    <UserSecretsId>6a6ddb04-3449-4ab5-86e3-1b9c9d7e946f</UserSecretsId>
+    <DockerfileContext>.</DockerfileContext>
   </PropertyGroup>
 
 </Project>
