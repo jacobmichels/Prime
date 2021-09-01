@@ -11,6 +11,7 @@ public class DatabaseGame
         IsPrivate = isPrivate;
         Owner = owner;
         Id = Guid.NewGuid();
+        Players = new List<DatabaseUser>();
     }
     [Required]
     public string Name {  get; set; }
@@ -20,5 +21,7 @@ public class DatabaseGame
     public bool IsPrivate {  get; set; }
     [Required]
     public virtual DatabaseUser Owner {  get; set; }
+    [Required]
+    public virtual List<DatabaseUser> Players {  get; set; }
 
 }
