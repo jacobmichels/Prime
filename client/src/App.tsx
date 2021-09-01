@@ -2,7 +2,7 @@ import { Box } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import About from "./Pages/About";
-import Games from "./Pages/Games";
+import Game from "./Pages/Game";
 import Home from "./Pages/Home";
 import Login from "./Pages/Login";
 import Questions from "./Pages/Questions";
@@ -39,8 +39,8 @@ function App() {
             <Route path="/about">
               <About />
             </Route>
-            <Route path="/games">
-              <Games />
+            <Route path="/game/:id">
+              <Game />
             </Route>
             <Route path="/questions">
               <Questions />
