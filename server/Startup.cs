@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using server.Controllers;
 using server.DataAccess;
 using StackExchange.Redis;
 
@@ -49,6 +50,7 @@ namespace server
                     return Task.CompletedTask;
                 };
             });
+            services.AddSignalR();
 
             services.AddSwaggerGen();
         }
@@ -83,6 +85,7 @@ namespace server
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<GameHub>("/gamehub");
             });
         }
     }
