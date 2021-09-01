@@ -39,8 +39,11 @@ namespace server.Controllers
             var newGame = new DatabaseGame(gameName, isPrivate, user);
             Db.Games.Add(newGame);
 
-            return Ok();
+            return Ok(newGame);
         }
+
+        [HttpPost]
+        [Authorize]
 
         private async Task<bool> GameWithNameExists(string gameName)
         {
