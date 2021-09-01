@@ -11,6 +11,8 @@ namespace server.DataAccess
 
         public DbSet<DatabaseQuestionSet> QuestionSets {  get; set; }
 
+        public DbSet<DatabaseGame> Games { get; set; }
+
         public PrimeContext(DbContextOptions<PrimeContext> options) : base(options)
         {
         }
