@@ -20,6 +20,7 @@ import Navbar from "../Components/Navbar";
 import { BASE_URL } from "../Util/BaseURL";
 import emailLogo from "../vector/email.svg";
 import githubLogo from "../vector/github.svg";
+import * as signalR from "@microsoft/signalr";
 
 export default function Home() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -36,7 +37,18 @@ export default function Home() {
         authCtx.setUsername(json.username);
       }
     }
+
+    async function ConnectToSignalR() {
+      let connection = new signalR.HubConnectionBuilder()
+        .withUrl(BASE_URL + "/gamehub")
+        .configureLogging(signalR.LogLevel.Information)
+        .build();
+      await connection.start();
+      console.log("SignalR Connected");
+    }
+
     GetUser();
+    ConnectToSignalR();
   });
 
   return (
