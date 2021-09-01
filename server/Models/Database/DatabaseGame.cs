@@ -10,11 +10,12 @@ public class DatabaseGame
         Name = name;
         IsPrivate = isPrivate;
         Owner = owner;
+        Id = Guid.NewGuid();
     }
     [Required]
     public string Name {  get; set; }
     [Key]
-    public int  Id {  get; set; }
+    public Guid Id {  get; set; }
     [Required]
     public bool IsPrivate {  get; set; }
     [Required]
