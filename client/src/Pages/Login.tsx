@@ -102,11 +102,7 @@ export default function Login() {
                         _placeholder={{ color: "white" }}
                         placeholder="Username or Email"
                       />
-                      <FormErrorMessage
-                        fontSize="md"
-                        // fontWeight="bold"
-                        color="white"
-                      >
+                      <FormErrorMessage fontSize="md" color="white">
                         ⚠️ {form.errors.usernameOrEmail}
                       </FormErrorMessage>
                     </FormControl>
@@ -120,19 +116,8 @@ export default function Login() {
                       <FormLabel color="white" htmlFor="password">
                         Password
                       </FormLabel>
-                      {/* <Input
-                        autoComplete="off"
-                        {...field}
-                        id="password"
-                        _placeholder={{ color: "white" }}
-                        placeholder="Password"
-                      /> */}
                       <PasswordInput field={field}></PasswordInput>
-                      <FormErrorMessage
-                        fontSize="md"
-                        // fontWeight="semibold"
-                        color="white"
-                      >
+                      <FormErrorMessage fontSize="md" color="white">
                         ⚠️ {form.errors.password}
                       </FormErrorMessage>
                     </FormControl>
