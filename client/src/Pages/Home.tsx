@@ -49,7 +49,7 @@ export default function Home() {
 
     GetUser();
     ConnectToSignalR();
-  });
+  }, [authCtx]);
 
   return (
     <>
@@ -103,7 +103,7 @@ export default function Home() {
                 </Button>
                 <Formik
                   initialValues={{}}
-                  onSubmit={function (values, actions) {
+                  onSubmit={async function (values, actions) {
                     alert(values);
                   }}
                 >
