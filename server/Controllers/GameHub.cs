@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using System;
+using System.Threading.Tasks;
+
 namespace server.Controllers
 {
     public class GameHub: Hub
