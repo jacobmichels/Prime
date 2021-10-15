@@ -18,6 +18,7 @@ import React, { useRef, useState } from "react";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import CanvasDraw from "react-canvas-draw";
+import useWindowDimensions from "../Util/WindowDimensionHook";
 
 export default function Game() {
   let { id }: any = useParams();
@@ -41,6 +42,8 @@ export default function Game() {
   const [brushRadius, setBrushRadius] = useState(3);
   const [canvasDisabled, setCanvasDisabled] = useState(false);
   const [brushColour, setBrushColour] = useState("#444");
+
+  const { height, width } = useWindowDimensions();
 
   const clearCanvas = () => {
     canvasRef.current?.clear();
@@ -117,8 +120,8 @@ export default function Game() {
 
               <CanvasDraw
                 brushRadius={brushRadius}
-                canvasHeight={800}
-                canvasWidth={1600}
+                canvasHeight={height - 0.2 * height}
+                canvasWidth={width - 0.03 * width}
                 disabled={canvasDisabled}
                 ref={canvasRef}
                 lazyRadius={0}
